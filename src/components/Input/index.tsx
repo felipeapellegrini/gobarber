@@ -1,4 +1,10 @@
-import React, { InputHTMLAttributes, useEffect, useRef } from 'react';
+import React, {
+  InputHTMLAttributes,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from 'react';
 import { IconBaseProps } from 'react-icons';
 import { useField } from '@unform/core'; // hook que recebe o nome do campo e retorna várias props
 import { Container } from './styles';
@@ -9,12 +15,25 @@ interface InputProsps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input: React.FC<InputProsps> = ({ name, icon: Icon, ...rest }) => {
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   /* vou inicializar nulo e passar o ref do meu
   input pra cá, associando à variável, daí posso manipular como eu quiser */
   const { fieldName, defaultValue, error, registerField } = useField(name);
   /* o registerField é o registro que precisa fazer do input, assim que o
 componente for exibido em tela, por isso, vou utilizar o useEffect */
+
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false);
+    setIsFilled(!!inputRef.current?.value);
+  }, []);
+
   useEffect(() => {
     registerField({
       name: fieldName,
@@ -24,9 +43,17 @@ componente for exibido em tela, por isso, vou utilizar o useEffect */
   }, [fieldName, registerField]);
 
   return (
-    <Container>
+    <Container isFocused={isFocused} isFilled={isFilled}>
       {Icon && <Icon size={20} />}
-      <input defaultValue={defaultValue} ref={inputRef} {...rest} />
+      <input
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
+        defaultValue={defaultValue}
+        ref={inputRef}
+        {...rest}
+      />
+
+      {error}
     </Container>
   );
 };

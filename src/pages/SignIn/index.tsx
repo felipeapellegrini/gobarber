@@ -20,7 +20,12 @@ const SignIn: React.FC = () => {
           <h1>Faça seu logon</h1>
           {/* no caso vou passar através do input, que é o componente que recebe os valores */}
           <Input name="email" icon={FiMail} placeholder="E-mail" />
-          <Input name="password" icon={FiLock} placeholder="Senha" />
+          <Input
+            name="password"
+            type="password"
+            icon={FiLock}
+            placeholder="Senha"
+          />
           <Button type="submit">Entrar</Button>
           <a href="forgot">Esqueci minha senha</a>
         </Form>
