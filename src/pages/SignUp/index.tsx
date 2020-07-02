@@ -33,7 +33,7 @@ const SignUp: React.FC = () => {
           <Button type="submit">Cadastrar</Button>
         </Form>
 
-        <a href="#">
+        <a href="/">
           <FiArrowLeft />
           Voltar para logon
         </a>

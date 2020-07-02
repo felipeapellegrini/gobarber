@@ -16,7 +16,6 @@ const SignIn: React.FC = () => {
       <Content>
         <img src={logoImg} alt="GoBarber" />
         <Form onSubmit={handleSubmit}>
-          {' '}
           {/* para funcionar o ufnrom deve passar quais campos ele vai monitorar o valor. */}
           <h1>Faça seu logon</h1>
           {/* no caso vou passar através do input, que é o componente que recebe os valores */}
@@ -30,8 +29,8 @@ const SignIn: React.FC = () => {
           <FiLogIn />
           Criar conta
         </a>
-        <Background />
       </Content>
+      <Background />
     </Container>
   );
 };
