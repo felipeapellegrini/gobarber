@@ -1,7 +1,7 @@
 import React, { InputHTMLAttributes, useEffect, useRef } from 'react';
 import { IconBaseProps } from 'react-icons';
-import { Container } from './styles';
 import { useField } from '@unform/core'; // hook que recebe o nome do campo e retorna várias props
+import { Container } from './styles';
 
 interface InputProsps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
