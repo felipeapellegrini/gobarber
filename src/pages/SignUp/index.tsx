@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Content, Background } from './styles';
-import { FiLogIn, FiMail, FiUser, FiLock, FiArrowLeft } from 'react-icons/fi';
+import { FiMail, FiUser, FiLock, FiArrowLeft } from 'react-icons/fi';
+import { Form } from '@unform/web';
 import logoImg from '../../assets/logo.svg';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -14,11 +15,12 @@ const SignUp: React.FC = () => (
       <form>
         <h1>Faça seu cadastro</h1>
 
-        <Input icon={FiMail} name="email" placeholder="E-mail" />
+        <Input name="name" icon={FiUser} placeholder="Nome" />
+        <Input name="email" icon={FiMail} placeholder="E-mail" />
 
         <Input
-          icon={FiLock}
           name="password"
+          icon={FiLock}
           type="password"
           placeholder="Senha"
         />
