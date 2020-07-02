@@ -10,10 +10,8 @@ interface InputProsps extends InputHTMLAttributes<HTMLInputElement> {
 
 const Input: React.FC<InputProsps> = ({ name, icon: Icon, ...rest }) => {
   const inputRef = useRef(null);
-  {
-    /* vou inicializar nulo e passar o ref do meu
+  /* vou inicializar nulo e passar o ref do meu
   input pra cá, associando à variável, daí posso manipular como eu quiser */
-  }
   const { fieldName, defaultValue, error, registerField } = useField(name);
   /* o registerField é o registro que precisa fazer do input, assim que o
 componente for exibido em tela, por isso, vou utilizar o useEffect */
