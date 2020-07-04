@@ -7,14 +7,15 @@ import React, {
 } from 'react';
 import { IconBaseProps } from 'react-icons';
 import { useField } from '@unform/core'; // hook que recebe o nome do campo e retorna várias props
-import { Container } from './styles';
+import { FiAlertCircle } from 'react-icons/fi';
+import { Container, Error } from './styles';
 
-interface InputProsps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   icon: React.ComponentType<IconBaseProps>;
 }
 
-const Input: React.FC<InputProsps> = ({ name, icon: Icon, ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   /* vou inicializar nulo e passar o ref do meu
   input pra cá, associando à variável, daí posso manipular como eu quiser */
@@ -43,7 +44,7 @@ componente for exibido em tela, por isso, vou utilizar o useEffect */
   }, [fieldName, registerField]);
 
   return (
-    <Container isFocused={isFocused} isFilled={isFilled}>
+    <Container isErrored={!!error} isFocused={isFocused} isFilled={isFilled}>
       {Icon && <Icon size={20} />}
       <input
         onFocus={handleInputFocus}
@@ -53,7 +54,11 @@ componente for exibido em tela, por isso, vou utilizar o useEffect */
         {...rest}
       />
 
-      {error}
+      {error && (
+        <Error title={error}>
+          <FiAlertCircle color="#c53030" size={20} />
+        </Error>
+      )}
     </Container>
   );
 };
