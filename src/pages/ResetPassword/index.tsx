@@ -1,9 +1,9 @@
-import React, { useRef, useCallback, useState } from 'react';
-import { FiLogIn, FiMail } from 'react-icons/fi';
+import React, { useRef, useCallback } from 'react';
+import { FiLock } from 'react-icons/fi';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
-import { Link } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Container, Content, AnimationContainer, Background } from './styles';
 import logoImg from '../../assets/logo.svg';
 import Input from '../../components/Input';
@@ -12,40 +12,53 @@ import getValidationErrors from '../../utils/getValidationError';
 import { useToast } from '../../hooks/toast';
 import api from '../../services/apiClient';
 
-interface ForgotPasswordFormData {
+interface SignInFormData {
   email: string;
+  password: string;
+  password_confirmation: string;
 }
 
-const ForgotPassword: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+const ResetPassword: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const history = useHistory();
+  const location = useLocation();
 
   const { addToast } = useToast();
 
   const handleSubmit = useCallback(
-    async (data: ForgotPasswordFormData) => {
+    async (data: SignInFormData) => {
       try {
-        setLoading(true);
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
-          email: Yup.string()
-            .required('E-mail obrigatório')
-            .email('Digite um e-mail válido'),
+          password: Yup.string().required('Senha obrigatória'),
+          password_confirmation: Yup.string().oneOf(
+            [Yup.ref('password'), undefined],
+            'As senhas devem ser iguais',
+          ),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await api.post('password/forgot', {
-          email: data.email,
+        const { password, password_confirmation } = data;
+        const token = location.search.replace('?token=', '');
+
+        if (!token) {
+          throw new Error();
+        }
+
+        await api.post('/password/reset', {
+          password,
+          password_confirmation,
+          token,
         });
+
+        history.push('/');
 
         addToast({
           type: 'success',
-          title: 'Pedido realizado com sucesso!',
-          description:
-            'Você receberá um e-mail com as instruções de recuperação de senha',
+          title: 'Senha alterada com sucesso!',
         });
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
@@ -55,15 +68,12 @@ const ForgotPassword: React.FC = () => {
         }
         addToast({
           type: 'error',
-          title: 'Erro na recuperação de senha',
-          description:
-            'Ocorreu um erro ao tentar recuperar a senha, cheque o e-mail.',
+          title: 'Erro ao resetar senha',
+          description: 'Ocorreu um erro ao resetar sua senha, tente novamente.',
         });
-      } finally {
-        setLoading(false);
       }
     },
-    [addToast],
+    [addToast, history, location.search],
   );
 
   return (
@@ -73,18 +83,22 @@ const ForgotPassword: React.FC = () => {
           <img src={logoImg} alt="GoBarber" />
           <Form ref={formRef} onSubmit={handleSubmit}>
             {/* para funcionar o ufnrom deve passar quais campos ele vai monitorar o valor. */}
-            <h1>Recuperar senha</h1>
+            <h1>Resetar senha</h1>
             {/* no caso vou passar através do input, que é o componente que recebe os valores */}
-            <Input name="email" icon={FiMail} placeholder="E-mail" />
-            <Button loading={loading} type="submit">
-              Recuperar
-            </Button>
+            <Input
+              name="password"
+              type="password"
+              icon={FiLock}
+              placeholder="Nova Senha"
+            />
+            <Input
+              name="password_confirmation"
+              type="password"
+              icon={FiLock}
+              placeholder="Confirme sua senha"
+            />
+            <Button type="submit">Alterar senha</Button>
           </Form>
-
-          <Link to="/signup">
-            <FiLogIn />
-            Voltar ao login
-          </Link>
         </AnimationContainer>
       </Content>
       <Background />
@@ -92,4 +106,4 @@ const ForgotPassword: React.FC = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
