@@ -41,7 +41,7 @@ export const Container = styled.div<ContainerProps>`
       color: #ff9000;
     `}
   input {
-    color: #666360;
+    color: #F4EDE8;
     flex: 1%;
     background: transparent;
     border: 0;
