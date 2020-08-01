@@ -58,11 +58,27 @@ const Profile: React.FC = () => {
           abortEarly: false,
         });
 
-        console.log(data);
+        const {
+          name,
+          email,
+          old_password,
+          password,
+          password_confirmation,
+        } = data;
 
-        const response = await api.put('/profile', data);
+        const formData = {
+          name,
+          email,
+          ...(old_password
+            ? {
+                old_password,
+                password,
+                password_confirmation,
+              }
+            : {}),
+        };
 
-        console.log(response);
+        const response = await api.put('/profile', formData);
 
         updateUser(response.data);
 
