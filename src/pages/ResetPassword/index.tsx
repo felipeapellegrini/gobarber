@@ -12,7 +12,7 @@ import getValidationErrors from '../../utils/getValidationError';
 import { useToast } from '../../hooks/toast';
 import api from '../../services/apiClient';
 
-interface SignInFormData {
+interface ResetPasswordFormData {
   email: string;
   password: string;
   password_confirmation: string;
@@ -26,7 +26,7 @@ const ResetPassword: React.FC = () => {
   const { addToast } = useToast();
 
   const handleSubmit = useCallback(
-    async (data: SignInFormData) => {
+    async (data: ResetPasswordFormData) => {
       try {
         formRef.current?.setErrors({});
         const schema = Yup.object().shape({
